@@ -2,6 +2,9 @@ import express from "express";
 import bodyParser from "body-parser";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
+import path from "path";
+const __dirname = path.resolve();
+
 
 dotenv.config();
 
@@ -36,6 +39,14 @@ app.post("/api/chat", async (req, res) => {
     res.status(500).send("Error communicating with OpenAI API");
   }
 });
+
+app.use(express.static(path.join(__dirname, "../frontend")));
+
+// Catch-all route to serve `index.html` for any unmatched route
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/index.html"));
+});
+
 
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
